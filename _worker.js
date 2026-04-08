@@ -946,12 +946,12 @@ export default {
 		const userAgentHeader = request.headers.get('User-Agent');
 		const userAgent = userAgentHeader ? userAgentHeader.toLowerCase() : "null";
 		const url = new URL(request.url);
-		// --- 强制锁死逻辑开始 ---
-		const mySecret = "abe601bc-ed4e-4ed3-89aa-c610c9490428"; // 你的唯一钥匙
-		const path = url.pathname.replace(/^\/|\/$/g, ""); // 提取路径并去掉斜杠
+		// --- 强制锁死逻辑开始（已修复变量名冲突） ---
+		const mySecret = "abe601bc-ed4e-4ed3-89aa-c610c9490428"; // 你的专属 UUID
+		const myLockPath = url.pathname.replace(/^\/|\/$/g, ""); // 改名为 myLockPath，避免冲突
 		
-		// 严密检查：如果访问路径不完全等于你的 UUID，直接拦截并报 404
-		if (path !== mySecret) {
+		// 严密检查：如果访问路径不完全等于你的 UUID，直接拦截
+		if (myLockPath !== mySecret) {
 		    return new Response('<html><head><title>404 Not Found</title></head><body><center><h1>404 Not Found</h1></center><hr><center>nginx</center></body></html>', {
 		        status: 404,
 		        headers: { 'Content-Type': 'text/html; charset=utf-8' },
